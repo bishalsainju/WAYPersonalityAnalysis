@@ -17,8 +17,8 @@ from wcntr import cntr
 # def featExtr():
 with open('analysisFiles/usermap.json') as json_data:
     usermap = json.load(json_data)
-with open('analysisFiles/userOpn.json') as json_data1:
-    userOpn = json.load(json_data1)
+with open('analysisFiles/userNeu.json') as json_data1:
+    userNeu = json.load(json_data1)
 # with open('analysisFiles/userCon.json') as json_data2:
 #     userCon = json.load(json_data2)
 # with open('analysisFiles/userExt.json') as json_data3:
@@ -51,16 +51,18 @@ for id in usermap:
     cnt += 1
     if cnt <= TAKE:
         training_feature_set.append(' '.join(usermap[id]))
-        train_labels.append(userOpn[id])
+        train_labels.append(userNeu[id])
     else:
         test_set.append(' '.join(usermap[id]))
-        test_labels.append(userOpn[id])
+        test_labels.append(userNeu[id])
 
 pred_set = []
 txt = raw_input("Enter a sentence: ")
 processedStatus = processStatus(txt)
 a1 = getFeatureVector(processedStatus)
-featureVector = compStopWords(a1)
+final1 = compStopWords(a1)
+final2 = stemm(final1)
+featureVector = compStopWords(final2)
 pred_set.append(' '.join(featureVector))
 
 # print training_feature_set
@@ -72,8 +74,8 @@ train_vectors = vectorizer.fit_transform(training_feature_set)
 test_vectors = vectorizer.transform(pred_set)
 
 # Perform classification with SVM, kernel=rbf
-# print train_vectors.shape
-# print test_vectors.shape
+print train_vectors.shape
+print test_vectors.shape
 # print train_vectors
 # print test_vectors
 

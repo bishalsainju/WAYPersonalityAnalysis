@@ -28,9 +28,9 @@ for row in inpStatus:
     opn = 1 if row[6] == 'y' else 0
     processedStatus = processStatus(status)
     a1 = getFeatureVector(processedStatus)
-    featureVector = compStopWords(a1)
-    # final2 = stemm(final1)
-    # featureVector = compStopWords(final2)
+    final1 = compStopWords(a1)
+    final2 = stemm(final1)
+    featureVector = compStopWords(final2)
     # featureVector = cntr(final3)
     if userid not in usermap:
         usermap[userid] = []
@@ -49,8 +49,6 @@ totalbagofwords.sort()
 writebow = json.dumps(usermap, indent=4)
 open("analysisFiles/usermap.json", 'w').write(writebow)
 
-writebowO = json.dumps(userOpn, indent=4)
-open("analysisFiles/userOpn.json", 'w').write(writebowO)
 
 # totalbow = {}
 # for word in totalbagofwords:
