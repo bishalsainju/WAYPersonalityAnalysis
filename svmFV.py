@@ -7,6 +7,7 @@ import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import svm
 from sklearn.metrics import classification_report
+from sklearn.naive_bayes import MultinomialNB
 
 from ps import processStatus
 from gfv import getFeatureVector
@@ -92,15 +93,32 @@ test_vectors = vectorizer.transform(pred_set)
 # print test_vectors.shape
 # print train_vectors
 # print test_vectors
-
-# classifier_rbf = svm.SVC()
-# t0 = time.time()
-# classifier_rbf.fit(train_vectors, train_labels)
-# t1 = time.time()
-# prediction_rbf = classifier_rbf.predict(test_vectors)
-# t2 = time.time()
-# time_rbf_train = t1-t0
-# time_rbf_predict = t2-t1
+classifier_rbfO = svm.SVC()
+classifier_rbfC = svm.SVC()
+classifier_rbfE = svm.SVC()
+classifier_rbfA = svm.SVC()
+classifier_rbfN = svm.SVC()
+t0 = time.time()
+classifier_rbfO.fit(train_vectors, train_labelsO)
+classifier_rbfC.fit(train_vectors, train_labelsC)
+classifier_rbfE.fit(train_vectors, train_labelsE)
+classifier_rbfA.fit(train_vectors, train_labelsA)
+classifier_rbfN.fit(train_vectors, train_labelsN)
+t1 = time.time()
+prediction_rbfO = classifier_rbfO.predict(test_vectors)
+prediction_rbfC = classifier_rbfC.predict(test_vectors)
+prediction_rbfE = classifier_rbfE.predict(test_vectors)
+prediction_rbfA = classifier_rbfA.predict(test_vectors)
+prediction_rbfN = classifier_rbfN.predict(test_vectors)
+t2 = time.time()
+time_linear_train = t1-t0
+time_linear_predict = t2-t1
+print "RBF SVM"
+print "Opn: " + str(prediction_rbfO)
+print "Con: " + str(prediction_rbfC)
+print "Ext: " + str(prediction_rbfE)
+print "Agr: " + str(prediction_rbfA)
+print "Neu: " + str(prediction_rbfN)
 
 # Perform classification with SVM, kernel=linear
 classifier_linearO = svm.SVC(kernel='linear')
@@ -108,7 +126,6 @@ classifier_linearC = svm.SVC(kernel='linear')
 classifier_linearE = svm.SVC(kernel='linear')
 classifier_linearA = svm.SVC(kernel='linear')
 classifier_linearN = svm.SVC(kernel='linear')
-
 t0 = time.time()
 classifier_linearO.fit(train_vectors, train_labelsO)
 classifier_linearC.fit(train_vectors, train_labelsC)
@@ -124,20 +141,63 @@ prediction_linearN = classifier_linearN.predict(test_vectors)
 t2 = time.time()
 time_linear_train = t1-t0
 time_linear_predict = t2-t1
+print "Linear SVM"
 print "Opn: " + str(prediction_linearO)
 print "Con: " + str(prediction_linearC)
 print "Ext: " + str(prediction_linearE)
 print "Agr: " + str(prediction_linearA)
 print "Neu: " + str(prediction_linearN)
+
 # Perform classification with SVM, kernel=linear
-# classifier_liblinear = svm.LinearSVC()
-# t0 = time.time()
-# classifier_liblinear.fit(train_vectors, train_labels)
-# t1 = time.time()
-# prediction_liblinear = classifier_liblinear.predict(test_vectors)
-# t2 = time.time()
-# time_liblinear_train = t1-t0
-# time_liblinear_predict = t2-t1
+classifier_liblinearO = svm.LinearSVC()
+classifier_liblinearC = svm.LinearSVC()
+classifier_liblinearE = svm.LinearSVC()
+classifier_liblinearA = svm.LinearSVC()
+classifier_liblinearN = svm.LinearSVC()
+t0 = time.time()
+classifier_liblinearO.fit(train_vectors, train_labelsO)
+classifier_liblinearC.fit(train_vectors, train_labelsC)
+classifier_liblinearE.fit(train_vectors, train_labelsE)
+classifier_liblinearA.fit(train_vectors, train_labelsA)
+classifier_liblinearN.fit(train_vectors, train_labelsN)
+t1 = time.time()
+prediction_liblinearO = classifier_linearO.predict(test_vectors)
+prediction_liblinearC = classifier_linearC.predict(test_vectors)
+prediction_liblinearE = classifier_linearE.predict(test_vectors)
+prediction_liblinearA = classifier_linearA.predict(test_vectors)
+prediction_liblinearN = classifier_linearN.predict(test_vectors)
+t2 = time.time()
+time_linear_train = t1-t0
+time_linear_predict = t2-t1
+print "Library Linear SVC"
+print "Opn: " + str(prediction_liblinearO)
+print "Con: " + str(prediction_liblinearC)
+print "Agr: " + str(prediction_liblinearA)
+print "Ext: " + str(prediction_liblinearE)
+print "Neu: " + str(prediction_liblinearN)
+
+clf_NB_O = MultinomialNB()
+clf_NB_C = MultinomialNB()
+clf_NB_E = MultinomialNB()
+clf_NB_A = MultinomialNB()
+clf_NB_N = MultinomialNB()
+clf_NB_O.fit(train_vectors, train_labelsO)
+clf_NB_C.fit(train_vectors, train_labelsC)
+clf_NB_E.fit(train_vectors, train_labelsE)
+clf_NB_A.fit(train_vectors, train_labelsA)
+clf_NB_N.fit(train_vectors, train_labelsN)
+prd_NB_O = clf_NB_O.predict(test_vectors)
+prd_NB_C = clf_NB_C.predict(test_vectors)
+prd_NB_E = clf_NB_E.predict(test_vectors)
+prd_NB_A = clf_NB_A.predict(test_vectors)
+prd_NB_N = clf_NB_N.predict(test_vectors)
+print "Naive Bayes"
+print "Opn: " + str(prd_NB_O)
+print "Con: " + str(prd_NB_C)
+print "Agr: " + str(prd_NB_E)
+print "Ext: " + str(prd_NB_A)
+print "Neu: " + str(prd_NB_N)
+
 
 # # Print results in a nice table
 # print("Results for SVC(kernel=rbf)")
