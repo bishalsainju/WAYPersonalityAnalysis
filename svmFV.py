@@ -17,16 +17,18 @@ from wcntr import cntr
 # def featExtr():
 with open('analysisFiles/usermap.json') as json_data:
     usermap = json.load(json_data)
-with open('analysisFiles/userNeu.json') as json_data1:
-    userNeu = json.load(json_data1)
-# with open('analysisFiles/userCon.json') as json_data2:
-#     userCon = json.load(json_data2)
-# with open('analysisFiles/userExt.json') as json_data3:
-#     userExt = json.load(json_data3)
-# with open('analysisFiles/userAgr.json') as json_data4:
-#     userAgr = json.load(json_data4)
-# with open('analysisFiles/userNeu.json') as json_data5:
-#     userNeu = json.load(json_data5)
+with open('analysisFiles/usermap1.json') as json_datax:
+    usermap1 = json.load(json_datax)
+with open('analysisFiles/userOpn.json') as json_data1:
+    userOpn = json.load(json_data1)
+with open('analysisFiles/userCon.json') as json_data2:
+    userCon = json.load(json_data2)
+with open('analysisFiles/userExt.json') as json_data3:
+    userExt = json.load(json_data3)
+with open('analysisFiles/userAgr.json') as json_data4:
+    userAgr = json.load(json_data4)
+with open('analysisFiles/userNeu.json') as json_data5:
+    userNeu = json.load(json_data5)
 #
 # f = open("analysisFiles/totalBOW.txt", "r")
 # lines = f.read().split('\n')
@@ -39,7 +41,11 @@ with open('analysisFiles/userNeu.json') as json_data1:
 
 training_feature_set = []
 test_set = []
-train_labels = []
+train_labelsO = []
+train_labelsC = []
+train_labelsE = []
+train_labelsA = []
+train_labelsN = []
 test_labels = []
 training_users = set()
 
@@ -51,20 +57,28 @@ for id in usermap:
     cnt += 1
     if cnt <= TAKE:
         training_feature_set.append(' '.join(usermap[id]))
-        train_labels.append(userNeu[id])
+        train_labelsO.append(userOpn[id])
+        train_labelsC.append(userCon[id])
+        train_labelsE.append(userExt[id])
+        train_labelsA.append(userAgr[id])
+        train_labelsN.append(userNeu[id])
     else:
         test_set.append(' '.join(usermap[id]))
-        test_labels.append(userNeu[id])
+        # train_labelsO.append(userOpn[id])
+        # train_labelsC.append(userCon[id])
+        # train_labelsE.append(userExt[id])
+        # train_labelsA.append(userAgr[id])
+        # train_labelsN.append(userNeu[id])
 
 pred_set = []
-txt = raw_input("Enter a sentence: ")
+txt = raw_input("Write about yourself: ")
 processedStatus = processStatus(txt)
 a1 = getFeatureVector(processedStatus)
 final1 = compStopWords(a1)
 final2 = stemm(final1)
 featureVector = compStopWords(final2)
+# pred_set.append(' '.join(usermap1["5489ed38556af050d6a93e5d27b95dfb"]))
 pred_set.append(' '.join(featureVector))
-
 # print training_feature_set
 vectorizer = TfidfVectorizer(min_df=1,
                              max_df = 0.95,
@@ -74,39 +88,56 @@ train_vectors = vectorizer.fit_transform(training_feature_set)
 test_vectors = vectorizer.transform(pred_set)
 
 # Perform classification with SVM, kernel=rbf
-print train_vectors.shape
-print test_vectors.shape
+# print train_vectors.shape
+# print test_vectors.shape
 # print train_vectors
 # print test_vectors
 
-classifier_rbf = svm.SVC()
-t0 = time.time()
-classifier_rbf.fit(train_vectors, train_labels)
-t1 = time.time()
-prediction_rbf = classifier_rbf.predict(test_vectors)
-t2 = time.time()
-time_rbf_train = t1-t0
-time_rbf_predict = t2-t1
+# classifier_rbf = svm.SVC()
+# t0 = time.time()
+# classifier_rbf.fit(train_vectors, train_labels)
+# t1 = time.time()
+# prediction_rbf = classifier_rbf.predict(test_vectors)
+# t2 = time.time()
+# time_rbf_train = t1-t0
+# time_rbf_predict = t2-t1
 
 # Perform classification with SVM, kernel=linear
-classifier_linear = svm.SVC(kernel='linear')
+classifier_linearO = svm.SVC(kernel='linear')
+classifier_linearC = svm.SVC(kernel='linear')
+classifier_linearE = svm.SVC(kernel='linear')
+classifier_linearA = svm.SVC(kernel='linear')
+classifier_linearN = svm.SVC(kernel='linear')
+
 t0 = time.time()
-classifier_linear.fit(train_vectors, train_labels)
+classifier_linearO.fit(train_vectors, train_labelsO)
+classifier_linearC.fit(train_vectors, train_labelsC)
+classifier_linearE.fit(train_vectors, train_labelsE)
+classifier_linearA.fit(train_vectors, train_labelsA)
+classifier_linearN.fit(train_vectors, train_labelsN)
 t1 = time.time()
-prediction_linear = classifier_linear.predict(test_vectors)
+prediction_linearO = classifier_linearO.predict(test_vectors)
+prediction_linearC = classifier_linearC.predict(test_vectors)
+prediction_linearE = classifier_linearE.predict(test_vectors)
+prediction_linearA = classifier_linearA.predict(test_vectors)
+prediction_linearN = classifier_linearN.predict(test_vectors)
 t2 = time.time()
 time_linear_train = t1-t0
 time_linear_predict = t2-t1
-print prediction_linear
+print "Opn: " + str(prediction_linearO)
+print "Con: " + str(prediction_linearC)
+print "Ext: " + str(prediction_linearE)
+print "Agr: " + str(prediction_linearA)
+print "Neu: " + str(prediction_linearN)
 # Perform classification with SVM, kernel=linear
-classifier_liblinear = svm.LinearSVC()
-t0 = time.time()
-classifier_liblinear.fit(train_vectors, train_labels)
-t1 = time.time()
-prediction_liblinear = classifier_liblinear.predict(test_vectors)
-t2 = time.time()
-time_liblinear_train = t1-t0
-time_liblinear_predict = t2-t1
+# classifier_liblinear = svm.LinearSVC()
+# t0 = time.time()
+# classifier_liblinear.fit(train_vectors, train_labels)
+# t1 = time.time()
+# prediction_liblinear = classifier_liblinear.predict(test_vectors)
+# t2 = time.time()
+# time_liblinear_train = t1-t0
+# time_liblinear_predict = t2-t1
 
 # # Print results in a nice table
 # print("Results for SVC(kernel=rbf)")
