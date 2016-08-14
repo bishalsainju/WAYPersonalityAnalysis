@@ -14,10 +14,10 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import matplotlib.pyplot as plt
 
-with open('analysisFiles/usermap.json') as json_data:
+with open('/home/bishal/workspace/essayPA/analysisFiles/usermap.json') as json_data:
     usermap = json.load(json_data)
-with open('analysisFiles/userOpn.json') as json_data1:
-    userOpn = json.load(json_data1)
+with open('/home/bishal/workspace/essayPA/analysisFiles/userCon.json') as json_data1:
+    userCon = json.load(json_data1)
 
 training_feature_set = []
 test_set = []
@@ -31,10 +31,10 @@ for id in usermap:
     cnt += 1
     if cnt <= TAKE:
         training_feature_set.append(' '.join(usermap[id]))
-        train_labels.append(userOpn[id])
+        train_labels.append(userCon[id])
     else:
         test_set.append(' '.join(usermap[id]))
-        test_labels.append(userOpn[id])
+        test_labels.append(userCon[id])
 
 vectorizer = TfidfVectorizer(min_df=1,
                              max_df = 0.95,
@@ -87,17 +87,20 @@ print("Results for SVC(kernel=rbf)")
 print("Training time: %fs; Prediction time: %fs" % (time_rbf_train, time_rbf_predict))
 print(classification_report(test_labels, prediction_rbf))
 print "Accuracy: " + str(accuracy_score(test_labels, prediction_rbf))
+print
 print("Results for SVC(kernel=linear)")
 print("Training time: %fs; Prediction time: %fs" % (time_linear_train, time_linear_predict))
 print(classification_report(test_labels, prediction_linear))
 print "Accuracy: " + str(accuracy_score(test_labels, prediction_linear))
+print
 print("Results for LinearSVC()")
 print("Training time: %fs; Prediction time: %fs" % (time_liblinear_train, time_liblinear_predict))
 print(classification_report(test_labels, prediction_liblinear))
 print "Accuracy: " + str(accuracy_score(test_labels, prediction_liblinear))
+print
 print("Results for NaiveBayes")
 print("Training time: %fs; Prediction time: %fs" % (time_NB_train, time_NB_predict))
-print(classification_report(test_label, prd_NB))
+print(classification_report(test_labels, prd_NB))
 print "Accuracy: " + str(accuracy_score(test_labels, prd_NB))
 
 def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
