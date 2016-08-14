@@ -1,0 +1,43 @@
+Accuracy: 0.572580645161
+Results for SVC(kernel=rbf)
+             precision    recall  f1-score   support
+
+        0.0       0.00      0.00      0.00       121
+        1.0       0.51      1.00      0.68       127
+
+avg / total       0.26      0.51      0.35       248
+
+Accuracy: 0.512096774194
+Results for SVC(kernel=linear)
+             precision    recall  f1-score   support
+
+        0.0       0.57      0.52      0.54       121
+        1.0       0.58      0.62      0.60       127
+
+avg / total       0.57      0.57      0.57       248
+
+Accuracy: 0.572580645161
+Results for LinearSVC()
+             precision    recall  f1-score   support
+
+        0.0       0.57      0.52      0.54       121
+        1.0       0.58      0.62      0.60       127
+
+avg / total       0.57      0.57      0.57       248
+
+Accuracy: 0.572580645161
+Results for NaiveBayes
+             precision    recall  f1-score   support
+
+        0.0       0.58      0.55      0.56       121
+        1.0       0.59      0.63      0.61       127
+
+avg / total       0.59      0.59      0.59       248
+
+Accuracy: 0.588709677419
+Confusion matrix, without normalization
+[[66 55]
+ [47 80]]
+Normalized confusion matrix
+[[ 0.55  0.45]
+ [ 0.37  0.63]]
