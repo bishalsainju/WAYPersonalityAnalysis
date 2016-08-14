@@ -22,6 +22,8 @@ with open('analysisFiles/usermap1.json') as json_data2:
     usermap1 = json.load(json_data2)
 with open('analysisFiles/userOpn1.json') as json_data3:
     userOpn1 = json.load(json_data3)
+with open('analysisFiles/userOpn2.json') as json_data4:
+    userOpn2 = json.load(json_data4)
 
 
 training_feature_set = []
@@ -44,65 +46,34 @@ vectorizer = TfidfVectorizer(min_df=1,
 train_vectors = vectorizer.fit_transform(training_feature_set)
 test_vectors = vectorizer.transform(test_set)
 
-# Perform classification with SVM, kernel=rbf
-classifier_rbf = svm.SVC()
-t0 = time.time()
-classifier_rbf.fit(train_vectors, train_labels)
-t1 = time.time()
-prediction_rbf = classifier_rbf.predict(test_vectors)
-t2 = time.time()
-time_rbf_train = t1-t0
-time_rbf_predict = t2-t1
-
 # Perform classification with SVM, kernel=linear
 classifier_linear = svm.SVC(kernel='linear')
-t0 = time.time()
 classifier_linear.fit(train_vectors, train_labels)
-t1 = time.time()
 prediction_linear = classifier_linear.predict(test_vectors)
-t2 = time.time()
-time_linear_train = t1-t0
-time_linear_predict = t2-t1
 
-# Perform classification with SVM, kernel=linear
-classifier_liblinear = svm.LinearSVC()
-t0 = time.time()
-classifier_liblinear.fit(train_vectors, train_labels)
-t1 = time.time()
-prediction_liblinear = classifier_linear.predict(test_vectors)
-t2 = time.time()
-time_liblinear_train = t1-t0
-time_liblinear_predict = t2-t1
+training_feature_set2 = []
+train_labels2 = []
+test_labels2 = []
+TAKE = 200
+cnt = 0
+for prediction in prediction_linear:
+    if prediction_linear == 1:
+        for id in usermap1:
+            cnt += 1
+            if cnt <= TAKE:
+                training_feature_set2.append(' '.join(usermap[id]))
+                train_labels.append(userOpn[id])
+            else:
+                test_set.append(' '.join(usermap[id]))
+                test_labels.append(userOpn[id])
 
-clf_NB = MultinomialNB()
-t0 = time.time()
-clf_NB.fit(train_vectors, train_labels)
-t1 = time.time()
-prd_NB = clf_NB.predict(test_vectors)
-t2 = time.time()
-time_NB_train = t1-t0
-time_NB_predict = t2-t1
+
 
 # Print results in a nice table
-print("Results for SVC(kernel=rbf)")
-print("Training time: %fs; Prediction time: %fs" % (time_rbf_train, time_rbf_predict))
-print(classification_report(test_labels, prediction_rbf))
-print "Accuracy: " + str(accuracy_score(test_labels, prediction_rbf))
-print
 print("Results for SVC(kernel=linear)")
-print("Training time: %fs; Prediction time: %fs" % (time_linear_train, time_linear_predict))
 print(classification_report(test_labels, prediction_linear))
 print "Accuracy: " + str(accuracy_score(test_labels, prediction_linear))
 print
-print("Results for LinearSVC()")
-print("Training time: %fs; Prediction time: %fs" % (time_liblinear_train, time_liblinear_predict))
-print(classification_report(test_labels, prediction_liblinear))
-print "Accuracy: " + str(accuracy_score(test_labels, prediction_liblinear))
-print
-print("Results for NaiveBayes")
-print("Training time: %fs; Prediction time: %fs" % (time_NB_train, time_NB_predict))
-print(classification_report(test_labels, prd_NB))
-print "Accuracy: " + str(accuracy_score(test_labels, prd_NB))
 
 def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -115,7 +86,7 @@ def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 # Compute confusion matrix
-cm = confusion_matrix(test_labels, prediction_liblinear)
+cm = confusion_matrix(test_labels, prediction_linear)
 np.set_printoptions(precision=2)
 print('Confusion matrix, without normalization')
 print(cm)
